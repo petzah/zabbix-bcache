@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>2.0</version>
-    <date>2016-12-25T13:31:27Z</date>
+    <date>2016-12-25T23:19:20Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -447,6 +447,15 @@
                             <url/>
                             <status>0</status>
                             <priority>4</priority>
+                            <description/>
+                            <type>0</type>
+                        </trigger_prototype>
+                        <trigger_prototype>
+                            <expression>{tpl_fs_bcache:bcache.bdev.item[{#BBDEV},state].str(no cache)}=1</expression>
+                            <name>Bcache bdev {#BBDEV} not attached to cache</name>
+                            <url/>
+                            <status>0</status>
+                            <priority>2</priority>
                             <description/>
                             <type>0</type>
                         </trigger_prototype>
