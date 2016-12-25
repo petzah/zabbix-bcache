@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>2.0</version>
-    <date>2016-12-25T12:15:29Z</date>
+    <date>2016-12-25T13:31:27Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -484,7 +484,7 @@
                             <percent_left>0.0000</percent_left>
                             <percent_right>0.0000</percent_right>
                             <ymin_type_1>0</ymin_type_1>
-                            <ymax_type_1>0</ymax_type_1>
+                            <ymax_type_1>1</ymax_type_1>
                             <ymin_item_1>0</ymin_item_1>
                             <ymax_item_1>0</ymax_item_1>
                             <graph_items>
@@ -581,7 +581,7 @@
                             <multiplier>1</multiplier>
                             <snmp_oid/>
                             <key>bcache.cdev.item[{#BCDEV},btree_written]</key>
-                            <delay>300</delay>
+                            <delay>3600</delay>
                             <history>7</history>
                             <trends>365</trends>
                             <status>0</status>
@@ -607,7 +607,93 @@
                             <publickey/>
                             <privatekey/>
                             <port/>
-                            <description/>
+                            <description>Sum of all btree writes, in (kilo/mega/giga) byte</description>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>Bcache</name>
+                                </application>
+                            </applications>
+                            <valuemap/>
+                            <logtimefmt/>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>cdev-io_errors-{#BCDEV}</name>
+                            <type>0</type>
+                            <snmp_community/>
+                            <multiplier>0</multiplier>
+                            <snmp_oid/>
+                            <key>bcache.cdev.item[{#BCDEV},io_errors]</key>
+                            <delay>300</delay>
+                            <history>7</history>
+                            <trends>365</trends>
+                            <status>0</status>
+                            <value_type>3</value_type>
+                            <allowed_hosts/>
+                            <units/>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description>Number of errors that have occurred, decayed by io_error_halflife</description>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>Bcache</name>
+                                </application>
+                            </applications>
+                            <valuemap/>
+                            <logtimefmt/>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>cdev-metadata_written-{#BCDEV}</name>
+                            <type>0</type>
+                            <snmp_community/>
+                            <multiplier>1</multiplier>
+                            <snmp_oid/>
+                            <key>bcache.cdev.item[{#BCDEV},metadata_written]</key>
+                            <delay>3600</delay>
+                            <history>7</history>
+                            <trends>365</trends>
+                            <status>0</status>
+                            <value_type>0</value_type>
+                            <allowed_hosts/>
+                            <units>B</units>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1e+06</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description>Sum of all non data writes (btree writes and all other metadata).</description>
                             <inventory_link>0</inventory_link>
                             <applications>
                                 <application>
@@ -624,7 +710,7 @@
                             <multiplier>1</multiplier>
                             <snmp_oid/>
                             <key>bcache.cdev.item[{#BCDEV},written]</key>
-                            <delay>300</delay>
+                            <delay>3600</delay>
                             <history>7</history>
                             <trends>365</trends>
                             <status>0</status>
@@ -650,7 +736,7 @@
                             <publickey/>
                             <privatekey/>
                             <port/>
-                            <description/>
+                            <description>Sum of all data that has been written to the cache; comparison with btree_written gives the amount of write inflation in bcache.</description>
                             <inventory_link>0</inventory_link>
                             <applications>
                                 <application>
@@ -661,8 +747,75 @@
                             <logtimefmt/>
                         </item_prototype>
                     </item_prototypes>
-                    <trigger_prototypes/>
-                    <graph_prototypes/>
+                    <trigger_prototypes>
+                        <trigger_prototype>
+                            <expression>{tpl_fs_bcache:bcache.cdev.item[{#BCDEV},io_errors].last()}&lt;&gt;0</expression>
+                            <name>Bcache cdev {#BCDEV} io_errors</name>
+                            <url/>
+                            <status>0</status>
+                            <priority>4</priority>
+                            <description/>
+                            <type>0</type>
+                        </trigger_prototype>
+                    </trigger_prototypes>
+                    <graph_prototypes>
+                        <graph_prototype>
+                            <name>Bcache cdev {#BCDEV} written</name>
+                            <width>900</width>
+                            <height>200</height>
+                            <yaxismin>0.0000</yaxismin>
+                            <yaxismax>100.0000</yaxismax>
+                            <show_work_period>1</show_work_period>
+                            <show_triggers>1</show_triggers>
+                            <type>0</type>
+                            <show_legend>1</show_legend>
+                            <show_3d>0</show_3d>
+                            <percent_left>0.0000</percent_left>
+                            <percent_right>0.0000</percent_right>
+                            <ymin_type_1>0</ymin_type_1>
+                            <ymax_type_1>0</ymax_type_1>
+                            <ymin_item_1>0</ymin_item_1>
+                            <ymax_item_1>0</ymax_item_1>
+                            <graph_items>
+                                <graph_item>
+                                    <sortorder>0</sortorder>
+                                    <drawtype>0</drawtype>
+                                    <color>00C800</color>
+                                    <yaxisside>0</yaxisside>
+                                    <calc_fnc>2</calc_fnc>
+                                    <type>0</type>
+                                    <item>
+                                        <host>tpl_fs_bcache</host>
+                                        <key>bcache.cdev.item[{#BCDEV},btree_written]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>1</sortorder>
+                                    <drawtype>0</drawtype>
+                                    <color>C80000</color>
+                                    <yaxisside>0</yaxisside>
+                                    <calc_fnc>2</calc_fnc>
+                                    <type>0</type>
+                                    <item>
+                                        <host>tpl_fs_bcache</host>
+                                        <key>bcache.cdev.item[{#BCDEV},metadata_written]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>2</sortorder>
+                                    <drawtype>0</drawtype>
+                                    <color>0000C8</color>
+                                    <yaxisside>0</yaxisside>
+                                    <calc_fnc>2</calc_fnc>
+                                    <type>0</type>
+                                    <item>
+                                        <host>tpl_fs_bcache</host>
+                                        <key>bcache.cdev.item[{#BCDEV},written]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                    </graph_prototypes>
                     <host_prototypes/>
                 </discovery_rule>
                 <discovery_rule>
@@ -699,13 +852,13 @@
                     <description>{#BCSET}</description>
                     <item_prototypes>
                         <item_prototype>
-                            <name>cset-btree_cache_size-{#BCSET}</name>
+                            <name>cset-average_key_size-{#BCSET}</name>
                             <type>0</type>
                             <snmp_community/>
                             <multiplier>1</multiplier>
                             <snmp_oid/>
-                            <key>bcache.cset.item[{#BCSET},btree_cache_size]</key>
-                            <delay>300</delay>
+                            <key>bcache.cset.item[{#BCSET},average_key_size]</key>
+                            <delay>3600</delay>
                             <history>7</history>
                             <trends>365</trends>
                             <status>0</status>
@@ -731,7 +884,50 @@
                             <publickey/>
                             <privatekey/>
                             <port/>
-                            <description/>
+                            <description>Average data per key in the btree.</description>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>Bcache</name>
+                                </application>
+                            </applications>
+                            <valuemap/>
+                            <logtimefmt/>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>cset-btree_cache_size-{#BCSET}</name>
+                            <type>0</type>
+                            <snmp_community/>
+                            <multiplier>1</multiplier>
+                            <snmp_oid/>
+                            <key>bcache.cset.item[{#BCSET},btree_cache_size]</key>
+                            <delay>600</delay>
+                            <history>7</history>
+                            <trends>365</trends>
+                            <status>0</status>
+                            <value_type>0</value_type>
+                            <allowed_hosts/>
+                            <units>B</units>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1e+06</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description>Amount of memory currently used by the btree cache</description>
                             <inventory_link>0</inventory_link>
                             <applications>
                                 <application>
@@ -748,7 +944,7 @@
                             <multiplier>0</multiplier>
                             <snmp_oid/>
                             <key>bcache.cset.item[{#BCSET},cache_available_percent]</key>
-                            <delay>300</delay>
+                            <delay>600</delay>
                             <history>7</history>
                             <trends>365</trends>
                             <status>0</status>
@@ -774,7 +970,7 @@
                             <publickey/>
                             <privatekey/>
                             <port/>
-                            <description/>
+                            <description>Percentage of cache device which doesn't contain dirty data, and could potentially be used for writeback. This doesn't mean this space isn't used for clean cached data; the unused statistic (in priority_stats) is typically much lower.</description>
                             <inventory_link>0</inventory_link>
                             <applications>
                                 <application>
@@ -827,15 +1023,330 @@
                             <valuemap/>
                             <logtimefmt/>
                         </item_prototype>
+                        <item_prototype>
+                            <name>cset-stats_day-cache_hit_ratio-{#BCSET}</name>
+                            <type>0</type>
+                            <snmp_community/>
+                            <multiplier>0</multiplier>
+                            <snmp_oid/>
+                            <key>bcache.cset.stats[{#BCSET},day,cache_hit_ratio]</key>
+                            <delay>3600</delay>
+                            <history>7</history>
+                            <trends>365</trends>
+                            <status>0</status>
+                            <value_type>3</value_type>
+                            <allowed_hosts/>
+                            <units>%</units>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description/>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>Bcache</name>
+                                </application>
+                            </applications>
+                            <valuemap/>
+                            <logtimefmt/>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>cset-stats_five_minute-cache_hit_ratio-{#BCSET}</name>
+                            <type>0</type>
+                            <snmp_community/>
+                            <multiplier>0</multiplier>
+                            <snmp_oid/>
+                            <key>bcache.cset.stats[{#BCSET},five_minute,cache_hit_ratio]</key>
+                            <delay>300</delay>
+                            <history>7</history>
+                            <trends>365</trends>
+                            <status>0</status>
+                            <value_type>3</value_type>
+                            <allowed_hosts/>
+                            <units>%</units>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description/>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>Bcache</name>
+                                </application>
+                            </applications>
+                            <valuemap/>
+                            <logtimefmt/>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>cset-stats_hour-cache_hit_ratio-{#BCSET}</name>
+                            <type>0</type>
+                            <snmp_community/>
+                            <multiplier>0</multiplier>
+                            <snmp_oid/>
+                            <key>bcache.cset.stats[{#BCSET},hour,cache_hit_ratio]</key>
+                            <delay>3600</delay>
+                            <history>7</history>
+                            <trends>365</trends>
+                            <status>0</status>
+                            <value_type>3</value_type>
+                            <allowed_hosts/>
+                            <units>%</units>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description/>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>Bcache</name>
+                                </application>
+                            </applications>
+                            <valuemap/>
+                            <logtimefmt/>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>cset-stats_total-cache_hit_ratio-{#BCSET}</name>
+                            <type>0</type>
+                            <snmp_community/>
+                            <multiplier>0</multiplier>
+                            <snmp_oid/>
+                            <key>bcache.cset.stats[{#BCSET},total,cache_hit_ratio]</key>
+                            <delay>3600</delay>
+                            <history>7</history>
+                            <trends>365</trends>
+                            <status>0</status>
+                            <value_type>3</value_type>
+                            <allowed_hosts/>
+                            <units>%</units>
+                            <delta>0</delta>
+                            <snmpv3_contextname/>
+                            <snmpv3_securityname/>
+                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                            <snmpv3_authpassphrase/>
+                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                            <snmpv3_privpassphrase/>
+                            <formula>1</formula>
+                            <delay_flex/>
+                            <params/>
+                            <ipmi_sensor/>
+                            <data_type>0</data_type>
+                            <authtype>0</authtype>
+                            <username/>
+                            <password/>
+                            <publickey/>
+                            <privatekey/>
+                            <port/>
+                            <description/>
+                            <inventory_link>0</inventory_link>
+                            <applications>
+                                <application>
+                                    <name>Bcache</name>
+                                </application>
+                            </applications>
+                            <valuemap/>
+                            <logtimefmt/>
+                        </item_prototype>
                     </item_prototypes>
                     <trigger_prototypes/>
-                    <graph_prototypes/>
+                    <graph_prototypes>
+                        <graph_prototype>
+                            <name>Bcache cset {#BCSET} cache_hit_ratio</name>
+                            <width>900</width>
+                            <height>200</height>
+                            <yaxismin>0.0000</yaxismin>
+                            <yaxismax>100.0000</yaxismax>
+                            <show_work_period>1</show_work_period>
+                            <show_triggers>1</show_triggers>
+                            <type>0</type>
+                            <show_legend>1</show_legend>
+                            <show_3d>0</show_3d>
+                            <percent_left>0.0000</percent_left>
+                            <percent_right>0.0000</percent_right>
+                            <ymin_type_1>0</ymin_type_1>
+                            <ymax_type_1>1</ymax_type_1>
+                            <ymin_item_1>0</ymin_item_1>
+                            <ymax_item_1>0</ymax_item_1>
+                            <graph_items>
+                                <graph_item>
+                                    <sortorder>0</sortorder>
+                                    <drawtype>0</drawtype>
+                                    <color>00C800</color>
+                                    <yaxisside>0</yaxisside>
+                                    <calc_fnc>2</calc_fnc>
+                                    <type>0</type>
+                                    <item>
+                                        <host>tpl_fs_bcache</host>
+                                        <key>bcache.cset.stats[{#BCSET},day,cache_hit_ratio]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>1</sortorder>
+                                    <drawtype>0</drawtype>
+                                    <color>C80000</color>
+                                    <yaxisside>0</yaxisside>
+                                    <calc_fnc>2</calc_fnc>
+                                    <type>0</type>
+                                    <item>
+                                        <host>tpl_fs_bcache</host>
+                                        <key>bcache.cset.stats[{#BCSET},five_minute,cache_hit_ratio]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>2</sortorder>
+                                    <drawtype>0</drawtype>
+                                    <color>0000C8</color>
+                                    <yaxisside>0</yaxisside>
+                                    <calc_fnc>2</calc_fnc>
+                                    <type>0</type>
+                                    <item>
+                                        <host>tpl_fs_bcache</host>
+                                        <key>bcache.cset.stats[{#BCSET},hour,cache_hit_ratio]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>3</sortorder>
+                                    <drawtype>0</drawtype>
+                                    <color>C800C8</color>
+                                    <yaxisside>0</yaxisside>
+                                    <calc_fnc>2</calc_fnc>
+                                    <type>0</type>
+                                    <item>
+                                        <host>tpl_fs_bcache</host>
+                                        <key>bcache.cset.stats[{#BCSET},total,cache_hit_ratio]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                    </graph_prototypes>
                     <host_prototypes/>
                 </discovery_rule>
             </discovery_rules>
             <macros/>
             <templates/>
-            <screens/>
+            <screens>
+                <screen>
+                    <name>Bcache</name>
+                    <hsize>1</hsize>
+                    <vsize>3</vsize>
+                    <screen_items>
+                        <screen_item>
+                            <resourcetype>20</resourcetype>
+                            <width>750</width>
+                            <height>100</height>
+                            <x>0</x>
+                            <y>0</y>
+                            <colspan>1</colspan>
+                            <rowspan>1</rowspan>
+                            <elements>0</elements>
+                            <valign>0</valign>
+                            <halign>0</halign>
+                            <style>0</style>
+                            <url/>
+                            <dynamic>0</dynamic>
+                            <sort_triggers>0</sort_triggers>
+                            <resource>
+                                <name>Bcache bdev {#BBDEV} cache_hit_ratio</name>
+                                <host>tpl_fs_bcache</host>
+                            </resource>
+                            <max_columns>2</max_columns>
+                            <application/>
+                        </screen_item>
+                        <screen_item>
+                            <resourcetype>20</resourcetype>
+                            <width>750</width>
+                            <height>100</height>
+                            <x>0</x>
+                            <y>1</y>
+                            <colspan>1</colspan>
+                            <rowspan>1</rowspan>
+                            <elements>0</elements>
+                            <valign>0</valign>
+                            <halign>0</halign>
+                            <style>0</style>
+                            <url/>
+                            <dynamic>0</dynamic>
+                            <sort_triggers>0</sort_triggers>
+                            <resource>
+                                <name>Bcache cset {#BCSET} cache_hit_ratio</name>
+                                <host>tpl_fs_bcache</host>
+                            </resource>
+                            <max_columns>2</max_columns>
+                            <application/>
+                        </screen_item>
+                        <screen_item>
+                            <resourcetype>20</resourcetype>
+                            <width>750</width>
+                            <height>100</height>
+                            <x>0</x>
+                            <y>2</y>
+                            <colspan>1</colspan>
+                            <rowspan>1</rowspan>
+                            <elements>0</elements>
+                            <valign>0</valign>
+                            <halign>0</halign>
+                            <style>0</style>
+                            <url/>
+                            <dynamic>0</dynamic>
+                            <sort_triggers>0</sort_triggers>
+                            <resource>
+                                <name>Bcache cdev {#BCDEV} written</name>
+                                <host>tpl_fs_bcache</host>
+                            </resource>
+                            <max_columns>2</max_columns>
+                            <application/>
+                        </screen_item>
+                    </screen_items>
+                </screen>
+            </screens>
         </template>
     </templates>
 </zabbix_export>
