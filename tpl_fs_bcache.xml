@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>2.0</version>
-    <date>2016-12-25T23:19:20Z</date>
+    <date>2017-01-01T10:50:00Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -338,7 +338,7 @@
                             <multiplier>0</multiplier>
                             <snmp_oid/>
                             <key>bcache.bdev.stats[{#BBDEV},hour,cache_hit_ratio]</key>
-                            <delay>3600</delay>
+                            <delay>1200</delay>
                             <history>7</history>
                             <trends>365</trends>
                             <status>0</status>
@@ -422,8 +422,8 @@
                     </item_prototypes>
                     <trigger_prototypes>
                         <trigger_prototype>
-                            <expression>({TRIGGER.VALUE}=0 and {tpl_fs_bcache:bcache.bdev.stats[{#BBDEV},five_minute,cache_hit_ratio].last()}&lt;10) or&#13;
-({TRIGGER.VALUE}=1 and {tpl_fs_bcache:bcache.bdev.stats[{#BBDEV},five_minute,cache_hit_ratio].last()}&lt;80)</expression>
+                            <expression>({TRIGGER.VALUE}=0 and {tpl_fs_bcache:bcache.bdev.stats[{#BBDEV},hour,cache_hit_ratio].last()}&lt;20) or&#13;
+({TRIGGER.VALUE}=1 and {tpl_fs_bcache:bcache.bdev.stats[{#BBDEV},hour,cache_hit_ratio].last()}&lt;80)</expression>
                             <name>Bcache bdev {#BBDEV} cache_hit_ratio low</name>
                             <url/>
                             <status>0</status>
@@ -1125,7 +1125,7 @@
                             <multiplier>0</multiplier>
                             <snmp_oid/>
                             <key>bcache.cset.stats[{#BCSET},hour,cache_hit_ratio]</key>
-                            <delay>3600</delay>
+                            <delay>1200</delay>
                             <history>7</history>
                             <trends>365</trends>
                             <status>0</status>
@@ -1205,7 +1205,18 @@
                             <logtimefmt/>
                         </item_prototype>
                     </item_prototypes>
-                    <trigger_prototypes/>
+                    <trigger_prototypes>
+                        <trigger_prototype>
+                            <expression>({TRIGGER.VALUE}=0 and {tpl_fs_bcache:bcache.cset.stats[{#BCSET},hour,cache_hit_ratio].last()}&lt;20) or&#13;
+({TRIGGER.VALUE}=1 and {tpl_fs_bcache:bcache.cset.stats[{#BCSET},hour,cache_hit_ratio].last()}&lt;80)</expression>
+                            <name>Bcache cset {#BCSET} cache_hit_ratio low</name>
+                            <url/>
+                            <status>0</status>
+                            <priority>2</priority>
+                            <description/>
+                            <type>0</type>
+                        </trigger_prototype>
+                    </trigger_prototypes>
                     <graph_prototypes>
                         <graph_prototype>
                             <name>Bcache cset {#BCSET} cache_hit_ratio</name>
